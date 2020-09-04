@@ -6,6 +6,17 @@ window.addEventListener("DOMContentLoaded", (event) => {
     let gameOver = false;
     let compTurn = Math.random() >= .5;
     let newGameButton = document.getElementById("new-game");
+    let hardMode = true;
+    let difficultyButton = document.getElementById("difficulty-button")
+
+    difficultyButton.addEventListener("click", e => {
+        hardMode = !hardMode
+        if (hardMode) {
+            difficultyButton.innerText = "Easy"
+        } else {
+            difficultyButton.innerText = "Hard"
+        }
+    })
     if (turn === compTurn) {
         computerTurn();
     }
@@ -42,7 +53,12 @@ window.addEventListener("DOMContentLoaded", (event) => {
             }
             turn = !turn;
             if (turn === compTurn && !gameOver) {
-                smartComputer();
+                if (hardMode) {
+                    smartComputer();
+                } else {
+                    computerTurn();
+                }
+                
             }
         }
 
