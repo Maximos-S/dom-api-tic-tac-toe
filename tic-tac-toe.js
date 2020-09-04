@@ -4,7 +4,21 @@ window.addEventListener("DOMContentLoaded", (event) => {
     let x = [];
     let o = [];
     let gameOver = false;
+    let compTurn = Math.random() >= .5;
     let newGameButton = document.getElementById("new-game");
+    if (turn === compTurn) {
+        computerTurn();
+    }
+    let player = document.createElement('p');
+    if (compTurn === false) {
+        player.innerHTML = "User: X Computer: O"
+            document.getElementById("game-status").appendChild(player);
+    } else {
+        player.innerHTML = "User: O Computer: X"
+            document.getElementById("game-status").appendChild(player);
+    }
+
+
     newGameButton.disabled = true;
     let resetButton = document.getElementById("reset-button");
     repopulate();
@@ -15,8 +29,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
         if (!e.target.style.backgroundImage && !gameOver)  {
             if (turn) {
                 x.push(e.target.className);
-                //console.log(x);
-                // e.target.innerHtml = "<img src=https://assets.aaonline.io/Module-DOM-API/formative-project-tic-tac-toe/player-x.svg>"
                 e.target.style.backgroundImage =
                 "url(https://assets.aaonline.io/Module-DOM-API/formative-project-tic-tac-toe/player-x.svg)";
                 saveStatus();
@@ -29,9 +41,42 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 checkForWinner(o, 'O');
             }
             turn = !turn;
+            if (turn === compTurn && !gameOver) {
+                computerTurn();
+            }
         }
 
     });
+
+    function computerTurn () {
+        let row = Math.floor(3 * Math.random()) + 1;
+        let col = Math.floor(3 * Math.random()) + 1;
+
+        let square = `square row-${row} col-${col}`;
+
+        while (!gameOver && (x.includes(square) || o.includes(square))) {
+            row = Math.floor(3 * Math.random()) + 1;
+            col = Math.floor(3 * Math.random()) + 1;
+            square = `square row-${row} col-${col}`;
+        }
+
+        let targetSquare = document.getElementsByClassName(square)[0];
+
+          if (turn) {
+              x.push(targetSquare.className);
+              targetSquare.style.backgroundImage =
+                  "url(https://assets.aaonline.io/Module-DOM-API/formative-project-tic-tac-toe/player-x.svg)";
+              saveStatus();
+              checkForWinner(x, 'X');
+          } else {
+              o.push(targetSquare.className);
+              targetSquare.style.backgroundImage =
+                  "url(https://assets.aaonline.io/Module-DOM-API/formative-project-tic-tac-toe/player-o.svg)"
+              saveStatus();
+              checkForWinner(o, 'O');
+          }
+          turn = !turn;
+    }
 
     function saveStatus(){
         let divs = document.querySelectorAll('div');
@@ -73,6 +118,20 @@ window.addEventListener("DOMContentLoaded", (event) => {
         winner.innerHTML = ``;
         x = [];
         o = [];
+        compTurn = Math.random() >= .5;
+
+        if (compTurn === false) {
+            player.innerHTML = "User: X Computer: O"
+                document.getElementById("game-status").appendChild(player);
+
+        } else {
+            player.innerHTML = "User: O Computer: X"
+                document.getElementById("game-status").appendChild(player);
+        }
+
+        if (compTurn === turn) {
+            computerTurn();
+        }
 
     })
 
