@@ -85,7 +85,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
     //Check for Winner
     function checkForWinner(arr, team){
         //Checks for Rows and Collumns
-        for(num=0; num<3; num++){
+        for(num=1; num<=3; num++){
             winner = document.getElementById("game-status");
             let rowCount = arr.reduce((count, box) => box.includes(`row-${num}`) ? count+1 : count, 0);
             let colCount = arr.reduce((count, box) => box.includes(`col-${num}`) ? count+1 : count, 0);
