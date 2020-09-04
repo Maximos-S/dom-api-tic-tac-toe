@@ -42,7 +42,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             }
             turn = !turn;
             if (turn === compTurn && !gameOver) {
-                computerTurn();
+                smartComputer();
             }
         }
 
@@ -76,6 +76,121 @@ window.addEventListener("DOMContentLoaded", (event) => {
               checkForWinner(o, 'O');
           }
           turn = !turn;
+    }
+    function smartComputer(){
+        opponentArray = turn ? o : x;
+        selfArray = turn ? x : o;
+        let diag1 = ["square row-1 col-1", "square row-3 col-3", "square row-2 col-2"];
+        let diag2 = ["square row-1 col-3", "square row-3 col-1", "square row-2 col-2"];
+        let d1Count = 0;
+        for(let sq of diag1){
+            if(opponentArray.includes(sq)){
+                d1Count++;
+            }
+        }
+        if(d1Count == 2){
+            for(let sq of diag1){
+                if(!opponentArray.includes(sq) && !selfArray.includes(sq)){
+                    targetSquare = document.getElementsByClassName(sq)[0];
+                    if (turn) {
+                        x.push(targetSquare.className);
+                        targetSquare.style.backgroundImage =
+                            "url(https://assets.aaonline.io/Module-DOM-API/formative-project-tic-tac-toe/player-x.svg)";
+                        saveStatus();
+                        checkForWinner(x, 'X');
+                    } else {
+                        o.push(targetSquare.className);
+                        targetSquare.style.backgroundImage =
+                            "url(https://assets.aaonline.io/Module-DOM-API/formative-project-tic-tac-toe/player-o.svg)"
+                        saveStatus();
+                        checkForWinner(o, 'O');
+                    }
+                    turn = !turn;
+                    return;
+                }
+            }
+        }
+        let d2Count = 0;
+        for(let sq of diag2){
+            if(opponentArray.includes(sq)){
+                d2Count++;
+            }
+        }
+        if(d2Count == 2){
+            for(let sq of diag2){
+                if(!opponentArray.includes(sq) && !selfArray.includes(sq)){
+                    targetSquare = document.getElementsByClassName(sq)[0];
+                    if (turn) {
+                        x.push(targetSquare.className);
+                        targetSquare.style.backgroundImage =
+                            "url(https://assets.aaonline.io/Module-DOM-API/formative-project-tic-tac-toe/player-x.svg)";
+                        saveStatus();
+                        checkForWinner(x, 'X');
+                    } else {
+                        o.push(targetSquare.className);
+                        targetSquare.style.backgroundImage =
+                            "url(https://assets.aaonline.io/Module-DOM-API/formative-project-tic-tac-toe/player-o.svg)"
+                        saveStatus();
+                        checkForWinner(o, 'O');
+                    }
+                    turn = !turn;
+                    return;
+                }
+            }
+        }
+
+        for(num=1; num<=3; num++){
+            let rowCount = opponentArray.reduce((count, box) => box.includes(`row-${num}`) ? count+1 : count, 0);
+            if(rowCount == 2){
+                for(col=1; col<=3;col++){
+                    let square = `square row-${num} col-${col}`
+                    if(!x.includes(square) && !o.includes(square)){
+                        targetSquare = document.getElementsByClassName(square)[0];
+
+                        if (turn) {
+                            x.push(targetSquare.className);
+                            targetSquare.style.backgroundImage =
+                                "url(https://assets.aaonline.io/Module-DOM-API/formative-project-tic-tac-toe/player-x.svg)";
+                            saveStatus();
+                            checkForWinner(x, 'X');
+                        } else {
+                            o.push(targetSquare.className);
+                            targetSquare.style.backgroundImage =
+                                "url(https://assets.aaonline.io/Module-DOM-API/formative-project-tic-tac-toe/player-o.svg)"
+                            saveStatus();
+                            checkForWinner(o, 'O');
+                        }
+                        turn = !turn;
+                        return;
+                    }
+                }
+            }
+            let colCount = opponentArray.reduce((count, box) => box.includes(`col-${num}`) ? count+1 : count, 0);
+            if(colCount == 2){
+                for(row=1; row<=3;row++){
+                    let square = `square row-${row} col-${num}`
+                    if(!x.includes(square) && !o.includes(square)){
+                        targetSquare = document.getElementsByClassName(square)[0];
+                        if (turn) {
+                            x.push(targetSquare.className);
+                            targetSquare.style.backgroundImage =
+                                "url(https://assets.aaonline.io/Module-DOM-API/formative-project-tic-tac-toe/player-x.svg)";
+                            saveStatus();
+                            checkForWinner(x, 'X');
+                        } else {
+                            o.push(targetSquare.className);
+                            targetSquare.style.backgroundImage =
+                                "url(https://assets.aaonline.io/Module-DOM-API/formative-project-tic-tac-toe/player-o.svg)"
+                            saveStatus();
+                            checkForWinner(o, 'O');
+                        }
+                        turn = !turn;
+                        return;
+                    }
+                }
+            }
+        }
+        computerTurn();
     }
 
     function saveStatus(){
@@ -144,6 +259,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
     //Check for Winner
     function checkForWinner(arr, team){
         //Checks for Rows and Collumns
+        console.log("x:", x,"o:", o);
+        console.log(turn);
         for(num=1; num<=3; num++){
             winner = document.getElementById("game-status");
             let rowCount = arr.reduce((count, box) => box.includes(`row-${num}`) ? count+1 : count, 0);
